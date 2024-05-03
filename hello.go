@@ -27,7 +27,6 @@ func main() {
 	// Declaration of UI Elements
 	grid := tview.NewGrid()
 	search := tview.NewTextView()
-	playlists := tview.NewTextView()
 	songs := tview.NewTextView()
 	nowplaying := tview.NewTextView().SetText("Fireworks Festival\nRadwimps")
 
@@ -37,11 +36,7 @@ func main() {
 		SetTitle("Search").
 		SetTitleAlign(tview.AlignLeft).
 		SetBorder(true)
-	playlists.
-		SetBackgroundColor(tcell.ColorNone).
-		SetTitle("Playlists").
-		SetTitleAlign(tview.AlignLeft).
-		SetBorder(true)
+
 	nowplaying.
 		SetBackgroundColor(tcell.ColorNone).
 		SetTitle("Playing").
@@ -72,36 +67,6 @@ func main() {
 		sb.WriteString(fmt.Sprintf("[\"%d\"]%s[\"\"]\n", i, playlist))
 	}
 
-	// Key bindings for highlighting of playlists for selection
-	playlists.SetRegions(true).SetText(sb.String())
-	if playlists.HasFocus() {
-		playlists.Highlight(strconv.Itoa(highlightedPl))
-	}
-
-	playlists.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		if playlists.HasFocus() {
-			switch {
-			// Up event
-			case event.Rune() == 'j' || event.Key() == tcell.KeyDown:
-				highlightedPl++
-			// Down event
-			case event.Rune() == 'k' || event.Key() == tcell.KeyUp:
-				highlightedPl--
-			case event.Rune() == ' ' || event.Key() == tcell.KeyEnter || event.Rune() == 'l' || event.Key() == tcell.KeyRight:
-				app.SetFocus(songs)
-				// TODO selection event to show songs in main screen
-			}
-
-			// Go checks modulo by following the sign of a in a%b, python does the opposite
-			if highlightedPl < 0 {
-				highlightedPl = len(playlistArr) - 1
-				playlists.Highlight(fmt.Sprintf("%d", highlightedPl))
-			} else {
-				playlists.Highlight(fmt.Sprintf("%d", highlightedPl%len(playlistArr)))
-			}
-		}
-		return event
-	})
 
 	songs.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if songs.HasFocus() {
