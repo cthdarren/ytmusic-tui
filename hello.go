@@ -1,8 +1,10 @@
 package main
 
 import (
+	// "fmt"
 	"strings"
-	// "github.com/gdamore/tcell/v2"
+
+	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
 
@@ -37,15 +39,15 @@ func main() {
 		playlists.AddItem(playlist, "", 0, func() { })
 	}
 
-	// playlists.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-	// 	if event.Rune() == 'j' {
-	// 		return tcell.NewEventKey(tcell.KeyRune, 258, tcell.ModNone)
-	// 	}
-	// 	if event.Rune() == rune(tcell.KeyDown) {
-	// 		return nil
-	// 	}
-	// 	return event
-	// })
+	playlists.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey { // 	if event.Rune() == 'j' {
+		if event.Rune() == 'j'{
+			return tcell.NewEventKey(tcell.KeyDown, 0, 0)
+		}
+		if event.Rune() ==  'k'{
+			return tcell.NewEventKey(tcell.KeyUp, 0, 0)
+		}
+		return event
+	})
 
 	if err := app.SetRoot(grid, true).SetFocus(playlists).Run(); err != nil {
 		panic(err)
