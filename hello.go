@@ -2,25 +2,44 @@ package main
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/rivo/tview"
 )
 
-// User Interface
 func main() {
+	app := tview.NewApplication();
 
-	artistsBox := tview.NewTextView()
-	w := artistsBox.BatchWriter();
-	defer artistsBox.Clear();
-	fmt.Fprintln(w, "Nightcord at 25:00");
-	fmt.Fprintln(w, "Roselia");
-	fmt.Fprintln(w, "Linkin Park");
-	fmt.Fprintln(w, "IVE");
-	fmt.Fprintln(w, "Le Sserafim");
-	fmt.Println(artistsBox.GetText(false))
+	playliststringtest := "wee duty mood,chill,poggers,kpop,jap weirdge songs,weeb,normie,rock,linkin park,nc25,bandori"
+	playlistArr := strings.Split(playliststringtest, ",")
 
-	//box := tview.NewBox().SetBorder(true).SetTitle("YTM TUI!");
+	var sb strings.Builder
+	for i, playlist := range playlistArr {
+		sb.WriteString(fmt.Sprintf("[\"%d\"]", i))
+		sb.WriteString(playlist)
+		sb.WriteString("[\"\"]\n")
+	}
+	search := tview.NewTextView().SetText(" Search")
+	playlists := tview.NewTextView().SetRegions(true).SetText(sb.String())
+	nowplaying := tview.NewTextView().SetText("River Ed Sheeran")
 
-	if err := tview.NewApplication().SetRoot(artistsBox, true).Run(); err != nil {
+	grid := tview.NewGrid().
+		SetRows(1, 0, 3).
+		SetColumns(30, 0, 20).
+		SetBorders(true).
+		AddItem(search, 0, 0, 1, 3, 0, 10, false).
+		AddItem(nowplaying, 2, 0, 1, 3, 0, 0, false)
+
+		// Layout for screens narrower than 100 cells (menu and side bar are hidden).
+	grid.AddItem(playlists, 0, 0, 0, 0, 0, 0, true)
+
+	// Layout for screens wider than 100 cells.
+	// row index, col index, row span, col span, minheight, minwidth
+	grid.AddItem(playlists, 1, 0, 1, 1, 0, 100, true)
+	playlists.Highlight("1")
+
+	if err := app.SetRoot(grid, true).SetFocus(playlists).Run(); err != nil {
 		panic(err)
 	}
+
 }
