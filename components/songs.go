@@ -29,7 +29,7 @@ func NewSongsComponent(gui *Gui) *SongsComponent{
 		SetRegions(true).
 		Highlight(fmt.Sprintf("%d", highlighted)).
 		SetBackgroundColor(tcell.ColorNone).
-		SetTitle("Songs").
+		SetTitle(" Songs ").
 		SetTitleAlign(tview.AlignLeft).
 		SetBorder(true)
 

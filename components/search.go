@@ -15,7 +15,7 @@ func NewSearchComponent(gui *Gui) *SearchComponent{
 	// Make all elements transparent bg
 	search.
 		SetBackgroundColor(tcell.ColorNone).
-		SetTitle("Search").
+		SetTitle(" Search ").
 		SetTitleAlign(tview.AlignLeft).
 		SetBorder(true)
 	return &SearchComponent{

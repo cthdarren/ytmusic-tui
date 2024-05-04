@@ -27,7 +27,7 @@ func NewPlaylistComponent(gui *Gui) *PlaylistComponent {
 	playlists := tview.NewTextView()
 	playlists.
 		SetBackgroundColor(tcell.ColorNone).
-		SetTitle("Playlists").
+		SetTitle(" Playlists ").
 		SetTitleAlign(tview.AlignLeft).
 		SetBorder(true)
 	// Key bindings for highlighting of playlists for selection
