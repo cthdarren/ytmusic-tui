@@ -43,12 +43,8 @@ func NewSongsComponent(gui *Gui) *SongsComponent{
 			case event.Rune() == 'k' || event.Key() == tcell.KeyUp:
 				highlighted--
 			case event.Rune() == 'h' || event.Key() == tcell.KeyLeft:
-				songs.SetBorderColor(tcell.ColorWhite)
-				songs.SetTitleColor(tcell.ColorWhite)
-				gui.playlists.playlistsView.SetBorderColor(tcell.ColorRed)
-				gui.playlists.playlistsView.SetTitleColor(tcell.ColorRed)
-				gui.app.SetFocus(gui.playlists.playlistsView)
 				// TODO selection event to show songs in main screen
+				gui.Goto(songs.Box, gui.playlists.playlistsView.Box)
 			case event.Rune() == ' ' || event.Key() == tcell.KeyEnter || event.Rune() == 'l' || event.Key() == tcell.KeyRight:
 				// TODO selection event to show songs in main screen
 			}

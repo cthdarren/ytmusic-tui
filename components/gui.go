@@ -1,8 +1,7 @@
 package components
 
 import (
-	"fmt"
-
+	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
 
@@ -37,12 +36,13 @@ func (g *Gui) init(){
 	g.songs = NewSongsComponent(g)
 	g.search = NewSearchComponent(g)
 	g.nowplaying = NewNowPlayingComponent(g)
-	fmt.Println(g.songs.songsView)
 	g.container = NewContainer(g)
 }
 
 func (g *Gui) Start() error{
 	g.init()
+	g.playlists.playlistsView.SetBorderColor(tcell.ColorRed)
+	g.playlists.playlistsView.SetTitleColor(tcell.ColorRed)
 	if err := g.app.SetRoot(g.container.containerView, true).SetFocus(g.playlists.playlistsView).Run(); err != nil{
 		g.app.Stop()
 		return err
@@ -51,7 +51,11 @@ func (g *Gui) Start() error{
 }
 
 func (g *Gui) Goto(from *tview.Box, to *tview.Box){
-	
+	from.SetBorderColor(tcell.ColorWhite)
+	from.SetTitleColor(tcell.ColorWhite)
+	to.SetBorderColor(tcell.ColorRed)
+	to.SetTitleColor(tcell.ColorRed)
+	g.app.SetFocus(to)
 }
 
 

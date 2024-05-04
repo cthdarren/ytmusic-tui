@@ -9,15 +9,14 @@ import (
 	"github.com/rivo/tview"
 )
 
-type PlaylistComponent struct{
+type PlaylistComponent struct {
 	// TODO playlistData map/array/slice
-	playlistData string;
-	highlightedPl int;
+	playlistData  string
+	highlightedPl int
 	playlistsView *tview.TextView
 }
 
-
-func NewPlaylistComponent(gui *Gui) *PlaylistComponent{
+func NewPlaylistComponent(gui *Gui) *PlaylistComponent {
 	highlightedPl := 0
 
 	// TODO change to actual data
@@ -55,11 +54,7 @@ func NewPlaylistComponent(gui *Gui) *PlaylistComponent{
 			case event.Rune() == 'k' || event.Key() == tcell.KeyUp:
 				highlightedPl--
 			case event.Rune() == ' ' || event.Key() == tcell.KeyEnter || event.Rune() == 'l' || event.Key() == tcell.KeyRight:
-				gui.app.SetFocus(gui.songs.songsView)
-				playlists.SetBorderColor(tcell.ColorWhite)
-				playlists.SetTitleColor(tcell.ColorWhite)
-				gui.songs.songsView.SetBorderColor(tcell.ColorRed)
-				gui.songs.songsView.SetTitleColor(tcell.ColorRed)
+				gui.Goto(playlists.Box, gui.songs.songsView.Box)
 				// TODO selection event to show songs in main screen
 			}
 
