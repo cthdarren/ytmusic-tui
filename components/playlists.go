@@ -13,7 +13,7 @@ type PlaylistComponent struct{
 	// TODO playlistData map/array/slice
 	playlistData string;
 	highlightedPl int;
-	playlistsView tview.TextView
+	playlistsView *tview.TextView
 }
 
 
@@ -42,6 +42,9 @@ func NewPlaylistComponent(gui *Gui) *PlaylistComponent{
 		sb.WriteString(fmt.Sprintf("[\"%d\"]%s[\"\"]\n", i, playlist))
 	}
 
+	playlists.SetText(sb.String())
+	playlists.Highlight(fmt.Sprintf("%d", highlightedPl))
+
 	playlists.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if playlists.HasFocus() {
 			switch {
@@ -52,7 +55,11 @@ func NewPlaylistComponent(gui *Gui) *PlaylistComponent{
 			case event.Rune() == 'k' || event.Key() == tcell.KeyUp:
 				highlightedPl--
 			case event.Rune() == ' ' || event.Key() == tcell.KeyEnter || event.Rune() == 'l' || event.Key() == tcell.KeyRight:
-				gui.app.SetFocus(&gui.songs.songsView)
+				gui.app.SetFocus(gui.songs.songsView)
+				playlists.SetBorderColor(tcell.ColorWhite)
+				playlists.SetTitleColor(tcell.ColorWhite)
+				gui.songs.songsView.SetBorderColor(tcell.ColorRed)
+				gui.songs.songsView.SetTitleColor(tcell.ColorRed)
 				// TODO selection event to show songs in main screen
 			}
 
@@ -69,6 +76,6 @@ func NewPlaylistComponent(gui *Gui) *PlaylistComponent{
 
 	return &PlaylistComponent{
 		highlightedPl: 0,
-		playlistsView: *tview.NewTextView(),
+		playlistsView: playlists,
 	}
 }
