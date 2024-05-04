@@ -1,18 +1,28 @@
 package components
 
 import (
-	"strings"
+	"fmt"
 	"strconv"
+	"strings"
+
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
 
 type PlaylistComponent struct{
+	// TODO playlistData map/array/slice
+	playlistData string;
 	highlightedPl int;
+	playlistsView tview.TextView
 }
 
 
-func NewPlaylistComponent(highlightedPl int) *PlaylistComponent{
+func NewPlaylistComponent(gui *Gui) *PlaylistComponent{
+	highlightedPl := 0
+
+	// TODO change to actual data
+	playliststringtest := "wee duty mood,chill,poggers,kpop,jap weirdge songs,weeb,normie,rock,linkin park,nc25,bandori"
+	playlistArr := strings.Split(playliststringtest, ",")
 
 	var sb strings.Builder
 	playlists := tview.NewTextView()
@@ -27,6 +37,11 @@ func NewPlaylistComponent(highlightedPl int) *PlaylistComponent{
 		playlists.Highlight(strconv.Itoa(highlightedPl))
 	}
 
+	// Set up playlist selector
+	for i, playlist := range playlistArr {
+		sb.WriteString(fmt.Sprintf("[\"%d\"]%s[\"\"]\n", i, playlist))
+	}
+
 	playlists.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if playlists.HasFocus() {
 			switch {
@@ -37,7 +52,7 @@ func NewPlaylistComponent(highlightedPl int) *PlaylistComponent{
 			case event.Rune() == 'k' || event.Key() == tcell.KeyUp:
 				highlightedPl--
 			case event.Rune() == ' ' || event.Key() == tcell.KeyEnter || event.Rune() == 'l' || event.Key() == tcell.KeyRight:
-				app.SetFocus(songs)
+				gui.app.SetFocus(&gui.songs.songsView)
 				// TODO selection event to show songs in main screen
 			}
 
@@ -51,4 +66,9 @@ func NewPlaylistComponent(highlightedPl int) *PlaylistComponent{
 		}
 		return event
 	})
+
+	return &PlaylistComponent{
+		highlightedPl: 0,
+		playlistsView: *tview.NewTextView(),
+	}
 }
