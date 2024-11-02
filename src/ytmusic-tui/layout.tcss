@@ -1,21 +1,38 @@
-SongsWidget, SearchWidget, PlaylistWidget, NowPlayingWidget, MetaWidget {
-    border: solid white;
+ YtMusicTuiApp{
+     padding: 1;
+ }
+ SongsWidget,PlaylistWidget, MetaWidget, SearchWidget,  NowPlayingWidget{
+    border: solid #aaaaaa;
+    padding-left: 1;
+    padding-right: 1;
+}
+
+SearchWidget{
+    height: 3;
+}
+
+NowPlayingWidget{
+    height: 5;
+}
+
+ContentContainer{
+    padding: 0;
+    margin: 0;
 }
 
 SongsWidget {
     width:1fr;
+    height:1fr;
 }
 
 ContentContainer{
     width:1fr;
     height:1fr;
-    background: blue;
 }
 
 Sidebar {
     width: 20;
     dock: left;
-    background: red;
 }
 
 MetaWidget {
