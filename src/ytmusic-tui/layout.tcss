@@ -7,8 +7,13 @@
     padding-right: 1;
 }
 
+Input{
+    border: solid white;   
+    background: black 0%;
+}
+
 SearchWidget{
-    height: 3;
+    height: 5;
 }
 
 NowPlayingWidget{

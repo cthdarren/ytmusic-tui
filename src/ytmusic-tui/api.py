@@ -1,6 +1,5 @@
 
-
-def getSongDetails(searchResult):
+def parseSongResults(searchResult):
     res = []
     if len(searchResult) > 0:
         for result in searchResult:
@@ -10,7 +9,3 @@ def getSongDetails(searchResult):
                 res.append(result["title"])
 
     return res
-
-                
-
-

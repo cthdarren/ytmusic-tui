@@ -1,24 +1,21 @@
 from textual.app import App, ComposeResult
 from textual.containers import HorizontalGroup, Container
-from textual.widgets import Static, Label
-from api import getSongDetails
-
+from textual.widgets import Static, Label, Input
+from api import parseSongResults
 from ytmusicapi import YTMusic
 
-# yt = YTMusic('oauth.json')
-yt = YTMusic()
-search_results = yt.search('Oasis Wonderwall')
-
 class SongsWidget(Static):
+    def __init__(self, *args,song_list, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.song_list = song_list
     def compose(self) -> ComposeResult:
-        # songs = ["Song1", "Song2", "Song3"]
-        songs = getSongDetails(search_results)
-        for song in songs:
+        for song in self.song_list:
             yield Label(song)
 
-class SearchWidget(Static):
+class SearchWidget(Input):
     def compose(self) -> ComposeResult:
         yield Label("Search")
+        # yield Input(placeholder="Search", type="text")
 
 class PlaylistWidget(Static):
     def compose(self) -> ComposeResult:
@@ -43,9 +40,12 @@ class Sidebar(Container):
         yield PlaylistWidget(id="playlists")
 
 class ContentContainer(HorizontalGroup):
+    def __init__(self, *args, song_list, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.song_list = song_list
     def compose(self) -> ComposeResult:
         yield Sidebar(id="sidebar")
-        yield SongsWidget(id="songs")
+        yield SongsWidget(id="songs", song_list=self.song_list)
 
 
 class YtMusicTuiApp(App):
@@ -55,10 +55,15 @@ class YtMusicTuiApp(App):
 
     BINDINGS = [("d", "toggle_dark", "Toggle dark mode")]
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.song_results = ['test']
+
     def compose(self) -> ComposeResult:
         """Create child widgets for the app."""
-        yield SearchWidget(id="search")
-        yield ContentContainer(id="content")
+        yield Input(placeholder="Search", type="text")
+        # yield SearchWidget(id="search")
+        yield ContentContainer(id="content", song_list=self.song_results)
         yield NowPlayingWidget(id="nowplaying")
 
     def action_toggle_dark(self) -> None:
