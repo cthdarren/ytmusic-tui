@@ -7,13 +7,9 @@
     padding-right: 1;
 }
 
-Input{
+SearchWidget{
     border: solid white;   
     background: black 0%;
-}
-
-SearchWidget{
-    height: 5;
 }
 
 NowPlayingWidget{

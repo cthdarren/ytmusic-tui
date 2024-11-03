@@ -13,8 +13,10 @@ class SongsWidget(Static):
             yield Label(song)
 
 class SearchWidget(Input):
-    def compose(self) -> ComposeResult:
-        yield Label("Search")
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+    # def compose(self) -> ComposeResult:
+    #     yield Label("Search")
         # yield Input(placeholder="Search", type="text")
 
 class PlaylistWidget(Static):
@@ -61,7 +63,7 @@ class YtMusicTuiApp(App):
 
     def compose(self) -> ComposeResult:
         """Create child widgets for the app."""
-        yield Input(placeholder="Search", type="text")
+        yield SearchWidget(placeholder="Search", type="text")
         # yield SearchWidget(id="search")
         yield ContentContainer(id="content", song_list=self.song_results)
         yield NowPlayingWidget(id="nowplaying")
