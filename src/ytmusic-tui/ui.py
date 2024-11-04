@@ -1,3 +1,4 @@
+from logging import log
 from textual.app import App, ComposeResult
 from textual.containers import HorizontalGroup, Container
 from textual.widgets import Static, Label, Input
@@ -5,7 +6,7 @@ from api import parseSongResults
 from ytmusicapi import YTMusic
 
 class SongsWidget(Static):
-    def __init__(self, *args,song_list, **kwargs):
+    def __init__(self, *args, song_list=[], **kwargs):
         super().__init__(*args, **kwargs)
         self.song_list = song_list
     def compose(self) -> ComposeResult:
@@ -13,11 +14,11 @@ class SongsWidget(Static):
             yield Label(song)
 
 class SearchWidget(Input):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, update_function, *args, **kwargs):
         super().__init__(*args, **kwargs)
-    # def compose(self) -> ComposeResult:
-    #     yield Label("Search")
-        # yield Input(placeholder="Search", type="text")
+        self.update_function = update_function
+    def on_input_submitted(self, event: Input.Submitted):
+        self.update_function([event.value])
 
 class PlaylistWidget(Static):
     def compose(self) -> ComposeResult:
@@ -42,12 +43,14 @@ class Sidebar(Container):
         yield PlaylistWidget(id="playlists")
 
 class ContentContainer(HorizontalGroup):
-    def __init__(self, *args, song_list, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.song_list = song_list
+        self.sidebar = Sidebar(id="sidebar")
+        self.song_widget = SongsWidget(id="songs")
+
     def compose(self) -> ComposeResult:
-        yield Sidebar(id="sidebar")
-        yield SongsWidget(id="songs", song_list=self.song_list)
+        yield self.sidebar
+        yield self.song_widget
 
 
 class YtMusicTuiApp(App):
@@ -59,15 +62,27 @@ class YtMusicTuiApp(App):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.song_results = ['test']
+        self.search_widget = SearchWidget(placeholder="Search", type="text", update_function=self.update_song_window)
+        self.content_container = ContentContainer(id="content")
+        self.now_playing_widget = NowPlayingWidget(id="nowplaying")
+
+    def update_song_window(self, song_list):
+        self.content_container.song_widget.song_list = song_list
+        self.refresh_content()
+
+    def refresh_content(self):
+        self.content_container.song_widget.refresh(recompose=True)
 
     def compose(self) -> ComposeResult:
         """Create child widgets for the app."""
-        yield SearchWidget(placeholder="Search", type="text")
-        # yield SearchWidget(id="search")
-        yield ContentContainer(id="content", song_list=self.song_results)
-        yield NowPlayingWidget(id="nowplaying")
+        yield self.search_widget
+        yield self.content_container
+        yield self.now_playing_widget
+        # yield SearchWidget(placeholder="Search", type="text", update_function=self.update_song_results)
+        # yield ContentContainer(id="content", song_list=self.song_results)
+        # yield NowPlayingWidget(id="nowplaying")
 
     def action_toggle_dark(self) -> None:
         """An action to toggle dark mode."""
         self.dark = not self.dark
+
