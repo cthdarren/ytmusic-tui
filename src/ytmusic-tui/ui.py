@@ -1,8 +1,9 @@
 from logging import log
+import os
 from textual.app import App, ComposeResult
 from textual.containers import HorizontalGroup, Container
 from textual.widgets import Static, Label, Input
-from api import parseSongResults
+from api import ApiSingleton
 from ytmusicapi import YTMusic
 
 class SongsWidget(Static):
@@ -18,7 +19,9 @@ class SearchWidget(Input):
         super().__init__(*args, **kwargs)
         self.update_function = update_function
     def on_input_submitted(self, event: Input.Submitted):
-        self.update_function([event.value])
+        search_results = ApiSingleton().perform_search(event.value)
+        parsed_results = ApiSingleton().parse_song_results(search_results)
+        self.update_function(parsed_results)
 
 class PlaylistWidget(Static):
     def compose(self) -> ComposeResult:
@@ -62,9 +65,13 @@ class YtMusicTuiApp(App):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.authorised = False 
         self.search_widget = SearchWidget(placeholder="Search", type="text", update_function=self.update_song_window)
         self.content_container = ContentContainer(id="content")
         self.now_playing_widget = NowPlayingWidget(id="nowplaying")
+
+        if os.path.exists("oauth.json"):
+            self.authorised = True
 
     def update_song_window(self, song_list):
         self.content_container.song_widget.song_list = song_list
