@@ -36,10 +36,6 @@ Sidebar {
     dock: left;
 }
 
-MetaWidget {
-    height: 1fr;
-}
-
 PlaylistWidget {
     height: 1fr;
 }

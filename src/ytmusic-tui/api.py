@@ -26,7 +26,7 @@ class ApiSingleton(metaclass=Singleton):
         return self.get_playlist_names(self.yt.get_library_playlists())
 
     def perform_search(self, query):
-        return self.yt.search(query)
+        return self.yt.search(query, filter="songs", limit=20)
 
     def parse_song_results(self, search_result):
         res = []
