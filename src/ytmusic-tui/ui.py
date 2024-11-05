@@ -25,9 +25,9 @@ class SearchWidget(Input):
 
 class PlaylistWidget(Static):
     def compose(self) -> ComposeResult:
-        songs = ["Song1", "Song2", "Song3"]
-        for song in songs:
-            yield Label(song)
+        playlist_title_list = ApiSingleton().get_playlists()
+        for playlist_title in playlist_title_list:
+            yield Label(playlist_title)
 
 class NowPlayingWidget(Static):
     def compose(self) -> ComposeResult:

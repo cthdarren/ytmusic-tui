@@ -12,8 +12,18 @@ class ApiSingleton(metaclass=Singleton):
     def __init__(self):
         self.yt = YTMusic("oauth.json")
 
-    def get_playlists(self):
-        pass
+    def get_playlist_names(self, playlist_results: list[dict]) -> list[str]:
+        playlist_title_list = []
+        for playlist in playlist_results:
+            playlist_title = playlist.get("title", None)
+            if playlist_title == None:
+                continue
+            playlist_title_list.append(playlist_title)
+
+        return playlist_title_list
+
+    def get_playlists(self) -> list[str]:
+        return self.get_playlist_names(self.yt.get_library_playlists())
 
     def perform_search(self, query):
         return self.yt.search(query)
