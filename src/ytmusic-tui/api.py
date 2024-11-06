@@ -10,7 +10,7 @@ class Singleton(type):
 
 class ApiSingleton(metaclass=Singleton):
     def __init__(self):
-        self.yt = YTMusic("oauth.json")
+        self.yt = YTMusic("browser.json")
 
     def get_playlist_names(self, playlist_results: list[dict]) -> list[str]:
         playlist_title_list = []
