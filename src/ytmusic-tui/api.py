@@ -1,4 +1,6 @@
 from ytmusicapi import YTMusic
+from vlc import MediaPlayer
+from player import play_stream_from_url
 
 class Singleton(type):
     _instances = {}
@@ -25,8 +27,32 @@ class ApiSingleton(metaclass=Singleton):
     def get_playlists(self) -> list[str]:
         return self.get_playlist_names(self.yt.get_library_playlists())
 
+    def get_song_stream(self, vidId) -> str:
+        song_meta = self.yt.get_song(vidId)
+        stream_data = song_meta.get("streamingData", None)
+        if stream_data == None:
+            raise ValueError
+        stream_url = stream_data.get("serverAbrStreamingUrl", None)
+        # formats = stream_data.get("adaptiveFormats", None)
+        # if formats == None:
+        #     raise ValueError
+        # if len(formats) < 0:
+        #     raise ValueError
+        # stream_url = formats[0].get("url", None)
+        if stream_url == None: 
+            raise ValueError
+
+        return stream_url
+
+    def play_stream(self, vidId):
+        stream_url = self.get_song_stream(vidId)
+        play_stream_from_url(stream_url)
+
+
     def perform_search(self, query):
-        return self.yt.search(query, filter="songs", limit=20)
+        results = self.yt.search(query, filter="songs", limit=20)
+        self.play_stream(results[0]["videoId"])
+        return results
 
     def parse_song_results(self, search_result):
         res = []
