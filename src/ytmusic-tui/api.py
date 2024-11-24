@@ -51,7 +51,7 @@ class ApiSingleton(metaclass=Singleton):
 
     def perform_search(self, query):
         results = self.yt.search(query, filter="songs", limit=20)
-        self.play_stream(results[0]["videoId"])
+        # self.play_stream(results[0]["videoId"])
         return results
 
     def parse_song_results(self, search_result):

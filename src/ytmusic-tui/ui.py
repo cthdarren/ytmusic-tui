@@ -22,6 +22,7 @@ class SearchWidget(Input):
         search_results = ApiSingleton().perform_search(event.value)
         parsed_results = ApiSingleton().parse_song_results(search_results)
         self.update_function(parsed_results)
+        # focus song tab
 
 class PlaylistWidget(Static):
     def compose(self) -> ComposeResult:
