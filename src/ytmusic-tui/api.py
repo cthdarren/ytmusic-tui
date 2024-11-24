@@ -45,13 +45,14 @@ class ApiSingleton(metaclass=Singleton):
         return stream_url
 
     def play_stream(self, vidId):
-        stream_url = self.get_song_stream(vidId)
-        play_stream_from_url(stream_url)
+        vidurl = "https://www.youtube.com/watch?v=" + vidId
+        # stream_url = self.get_song_stream(vidId)
+        # play_stream_from_url(stream_url)
 
 
     def perform_search(self, query):
         results = self.yt.search(query, filter="songs", limit=20)
-        # self.play_stream(results[0]["videoId"])
+        self.play_stream(results[0]["videoId"])
         return results
 
     def parse_song_results(self, search_result):
